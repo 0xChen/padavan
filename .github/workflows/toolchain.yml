@@ -12,7 +12,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        target: [mipsel-linux-musl, mipsel-linux-uclibc]
+        target: [mipsel-linux-musl]
 
     steps:
       - uses: actions/checkout@main

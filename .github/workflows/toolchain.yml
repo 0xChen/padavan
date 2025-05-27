@@ -49,7 +49,9 @@ jobs:
           echo "PATH=$PATH"  # 检查环境变量
 
       - name: Build and Package
+        working-directory: toolchain
         run: |
+          echo "Current directory: $(pwd)"
           # 强制清除可能的残留配置
           make clean CT_TARGET=${{ matrix.target }} || true
           # 强制从源码构建，跳过下载预编译包
@@ -57,7 +59,6 @@ jobs:
           # 确保打包路径正确
           cd "${{ matrix.target }}"
           tar cJf "../${{ matrix.target }}.tar.xz" .
-        working-directory: toolchain
 
       - uses: actions/upload-artifact@main
         with:

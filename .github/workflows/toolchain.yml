@@ -51,7 +51,7 @@ jobs:
       - name: Build and Package
         run: |
           # 强制清除可能的残留配置
-          make -C toolchain clean CT_TARGET=${{ matrix.target }} || true
+          make clean CT_TARGET=${{ matrix.target }} || true
           # 强制从源码构建，跳过下载预编译包
           make CT_TARGET=${{ matrix.target }} FORCE_BUILD_TOOLCHAIN=1
           # 确保打包路径正确

@@ -43,10 +43,9 @@ jobs:
             xz-utils \
             curl \
             git
-          # 强制重新配置 libtool 并验证
-          sudo libtool --finish /usr/lib
-          libtool --version
-          which libtool
+          # 强制验证 texinfo 是否安装成功
+          makeinfo --version || { echo "❌ texinfo 未安装"; exit 1; }  
+          libtool --version || { echo "❌ libtool 未安装"; exit 1; }  
           echo "PATH=$PATH"  # 检查环境变量
 
       - name: Build and Package

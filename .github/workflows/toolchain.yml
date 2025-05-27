@@ -41,7 +41,9 @@ jobs:
 
       - name: Build and Package
         run: |
-          make CT_TARGET=${{ matrix.target }}
+          # 强制从源码构建，跳过下载预编译包
+          make CT_TARGET=${{ matrix.target }} FORCE_BUILD_TOOLCHAIN=1
+          # 确保打包路径正确
           cd "${{ matrix.target }}"
           tar cJf "../${{ matrix.target }}.tar.xz" .
         working-directory: toolchain

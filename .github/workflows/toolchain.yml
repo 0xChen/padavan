@@ -19,7 +19,25 @@ jobs:
 
       - name: Install Build Dependencies
         run: |
-          sudo apt-get update && sudo apt-get install -y bison flex gperf help2man libtool-bin texinfo
+          sudo apt-get update -qq
+          sudo apt-get install -y --no-install-recommends \
+            bison \
+            flex \
+            gperf \
+            help2man \
+            libtool-bin \
+            texinfo \
+            autoconf \
+            automake \
+            gettext \
+            g++ \
+            file \
+            python3 \
+            make \
+            wget
+          # 验证关键工具是否存在
+          libtool --version || exit 1
+          which libtool || exit 1
 
       - name: Build and Package
         run: |

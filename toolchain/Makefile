@@ -26,7 +26,7 @@ build:
 	@echo "\033[1;36m===> 📦 Configuring target: $(CT_TARGET)\033[0m"
 	@$(CT_NG) $(CT_TARGET) || { echo "\033[1;31m===> ❌ Failed to configure $(CT_TARGET): $$?\033[0m"; exit 1; }
 	@echo "\033[1;32m===> 🚧 Building toolchain...\033[0m"
-	@$(CT_NG) build CT_JOBS=$(shell nproc) || { echo "\033[1;31m===> ❌ Toolchain build failed: $$?\033[0m"; exit 1; }
+	@$(CT_NG) build CT_JOBS=1 || { echo "\033[1;31m===> ❌ Toolchain build failed: $$?\033[0m"; exit 1; }
 	@echo "\033[1;32m===> ✅ Toolchain build completed at:\033[0m \033[1;34m$(CT_PREFIX)\033[0m"
 
 clean:

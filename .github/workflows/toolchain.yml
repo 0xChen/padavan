@@ -61,7 +61,7 @@ jobs:
           tar cJf "../${{ matrix.target }}.tar.xz" .
 
       - name: Upload build logs on failure or success
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@main
         with:
           name: mipsel-linux-musl-build-logs
           path: |

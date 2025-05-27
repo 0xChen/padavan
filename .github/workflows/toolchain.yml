@@ -34,7 +34,10 @@ jobs:
             file \
             python3 \
             make \
-            wget
+            wget \
+            xz-utils \
+            curl \
+            git
           # 验证关键工具是否存在
           libtool --version || exit 1
           which libtool || exit 1

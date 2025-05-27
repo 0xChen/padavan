@@ -26,6 +26,8 @@ jobs:
             gperf \
             help2man \
             libtool-bin \
+            zlib1g-dev \
+            libncurses5-dev \
             texinfo \
             autoconf \
             automake \
@@ -38,12 +40,16 @@ jobs:
             xz-utils \
             curl \
             git
-          # 验证关键工具是否存在
-          libtool --version || exit 1
-          which libtool || exit 1
+          # 强制重新配置 libtool 并验证
+          sudo libtool --finish /usr/lib
+          libtool --version
+          which libtool
+          echo "PATH=$PATH"  # 检查环境变量
 
       - name: Build and Package
         run: |
+          # 强制清除可能的残留配置
+          make -C toolchain clean CT_TARGET=${{ matrix.target }} || true
           # 强制从源码构建，跳过下载预编译包
           make CT_TARGET=${{ matrix.target }} FORCE_BUILD_TOOLCHAIN=1
           # 确保打包路径正确

@@ -60,6 +60,15 @@ jobs:
           cd "${{ matrix.target }}"
           tar cJf "../${{ matrix.target }}.tar.xz" .
 
+      - name: Upload build logs on failure or success
+        uses: actions/upload-artifact@v3
+        with:
+          name: mipsel-linux-musl-build-logs
+          path: |
+            toolchain/.build/mipsel-linux-musl/build.log
+            toolchain/.build/mipsel-linux-musl/src/ncurses-6.5/
+            toolchain/.build/mipsel-linux-musl/build/build-ncurses-build/ 
+
       - uses: actions/upload-artifact@main
         with:
           name: ${{ matrix.target }}

@@ -26,18 +26,8 @@ build:
 	@echo "\033[1;36m===> 📦 Configuring target: $(CT_TARGET)\033[0m"
 	@$(CT_NG) $(CT_TARGET) || { echo "\033[1;31m===> ❌ Failed to configure $(CT_TARGET): $$?\033[0m"; exit 1; }
 	@echo "\033[1;32m===> 🚧 Building toolchain...\033[0m"
-        @export PYTHON=$$(which python3); \
-        export CT_PARALLEL_JOBS=$$(($$(nproc)/2)); \
-	@$(CT_NG) build CT_JOBS=$$CT_PARALLEL_JOBS CT_NCURSES_DISABLE_WIDEC=y || { echo "\033[1;31m===> ❌ Toolchain build failed: $$?\033[0m"; exit 1; }
+	@$(CT_NG) build CT_JOBS=$(shell nproc) || { echo "\033[1;31m===> ❌ Toolchain build failed: $$?\033[0m"; exit 1; }
 	@echo "\033[1;32m===> ✅ Toolchain build completed at:\033[0m \033[1;34m$(CT_PREFIX)\033[0m"
-
-        @echo "\033[1;36m===> 📝 Saving build logs...\033[0m"
-        @mkdir -p $(TOPDIR)/build-logs
-        @if [ -f ".build/$(CT_TARGET)/build.log.bz2" ]; then \
-            cp -v ".build/$(CT_TARGET)/build.log.bz2" "$(TOPDIR)/build-logs/"; \
-        else \
-            echo "\033[1;33m===> ⚠️ Build logs not found\033[0m"; \
-        fi
 
 clean:
 	@echo "\033[1;36m===> 🧹 Cleaning build artifacts...\033[0m"

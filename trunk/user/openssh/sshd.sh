@@ -14,10 +14,10 @@ func_create_config()
 # their default value where possible, but leave them commented.
 # Uncommented options override the default value.
 
-#Port 22
+Port 22
 #AddressFamily any
-#ListenAddress 0.0.0.0
-#ListenAddress ::
+ListenAddress 0.0.0.0
+ListenAddress ::
 
 # The default requires explicit activation of protocol 1
 Protocol 2
@@ -41,14 +41,14 @@ HostKey ${ed25519_key}
 # Logging
 # obsoletes QuietMode and FascistLogging
 #SyslogFacility AUTH
-#LogLevel INFO
+LogLevel INFO
 
 # Authentication:
 
 LoginGraceTime 1m
 PermitRootLogin yes
 #StrictModes yes
-MaxAuthTries 3
+MaxAuthTries 5
 #MaxSessions 10
 
 #RSAAuthentication yes
@@ -74,7 +74,7 @@ IgnoreUserKnownHosts yes
 #IgnoreRhosts yes
 
 # To disable tunneled clear text passwords, change to no here!
-#PasswordAuthentication yes
+PasswordAuthentication yes
 #PermitEmptyPasswords no
 
 # Change to no to disable s/key passwords

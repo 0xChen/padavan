@@ -45,8 +45,7 @@ jobs:
         working-directory: toolchain
         run: |
           # 强制清除可能的残留配置
-          make clean CT_TARGET=${{ matrix.target }} || true
-          export CT_PARALLEL_JOBS=1
+          make clean CT_TARGET=${{ matrix.target }}
           # 强制从源码构建，跳过下载预编译包
           make CT_TARGET=${{ matrix.target }} || true 
           # 确保打包路径正确

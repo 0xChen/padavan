@@ -37,6 +37,7 @@ jobs:
             libgmp3-dev \
             libltdl-dev \
             libexpat-dev \
+            libexpat1-dev \
             gawk \
             autopoint \
             texinfo \

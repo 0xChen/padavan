@@ -78,16 +78,6 @@ jobs:
           cd "${{ matrix.target }}"
           tar cJf "../${{ matrix.target }}.tar.xz" .
 
-          echo "Copying build logs for artifact upload..."
-          mkdir -p ${{ github.workspace }}/ct_build_logs
-          cp -vf .build/mipsel-linux-musl/build.log* ${{ github.workspace }}/ct_build_logs/ || echo "Logs not found"
-
-      - name: Upload build logs on failure or success
-        uses: actions/upload-artifact@main
-        with:
-          name: mipsel-linux-musl-build-logs
-          path: ${{ github.workspace }}/ct_build_logs/
-
       - uses: actions/upload-artifact@main
         with:
           name: ${{ matrix.target }}

@@ -35,8 +35,8 @@ jobs:
             autopoint \
             gettext \
             python3-docutils \
-            build-essential \
-            lzip 
+            build-essential
+            
           # 强制验证 texinfo 是否安装成功
           makeinfo --version || { echo "❌ texinfo 未安装"; exit 1; }  
           libtool --version || { echo "❌ libtool 未安装"; exit 1; }  

@@ -35,6 +35,7 @@ jobs:
             libmpc-dev \
             libgmp3-dev \
             libltdl-dev \
+            libexpat-dev \
             gawk \
             autopoint \
             texinfo \
@@ -45,6 +46,7 @@ jobs:
             file \
             nano \
             python3 \
+            python3-dev \
             python3-docutils \
             make \
             wget \
@@ -55,6 +57,7 @@ jobs:
             build-essential \
             pkg-config \
             bc \
+            lzip \
             git
           # 强制验证 texinfo 是否安装成功
           makeinfo --version || { echo "❌ texinfo 未安装"; exit 1; }  
@@ -64,19 +67,18 @@ jobs:
       - name: Build and Package
         working-directory: toolchain
         run: |
-          echo "Current directory: $(pwd)"
           # 强制清除可能的残留配置
           make clean CT_TARGET=${{ matrix.target }} || true
+          export CT_PARALLEL_JOBS=1
           # 强制从源码构建，跳过下载预编译包
-          make CT_TARGET=${{ matrix.target }} FORCE_BUILD_TOOLCHAIN=1 || true 
+          make CT_TARGET=${{ matrix.target }} || true 
           # 确保打包路径正确
           cd "${{ matrix.target }}"
           tar cJf "../${{ matrix.target }}.tar.xz" .
 
           echo "Copying build logs for artifact upload..."
-          # 确保这些源路径是正确的
-          mkdir -p ${{ github.workspace }}/ct_build_logs # 在仓库根目录创建日志文件夹
-          cp -vf .build/mipsel-linux-musl/build.log ${{ github.workspace }}/ct_build_logs/ || echo "build.log not found"
+          mkdir -p ${{ github.workspace }}/ct_build_logs
+          cp -vf .build/mipsel-linux-musl/build.log* ${{ github.workspace }}/ct_build_logs/ || echo "Logs not found"
 
       - name: Upload build logs on failure or success
         uses: actions/upload-artifact@main

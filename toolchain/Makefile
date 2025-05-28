@@ -6,7 +6,7 @@
 TOPDIR      := $(CURDIR)
 CT_TARGET   ?= $(or $(shell echo $$CT_TARGET), mipsel-linux-musl)
 CT_PREFIX   ?= $(or $(shell echo $$CT_PREFIX), $(TOPDIR)/$(CT_TARGET))
-CT_NG       := ./ct-ng
+CT_NG       := $(shell which ct-ng || echo "$(PWD)/ct-ng")
 
 .PHONY: all build clean distclean
 
@@ -14,7 +14,8 @@ all: build
 
 build:
 	@echo "\033[1;32m===> 🔧 Starting toolchain build for:\033[0m \033[1;34m$(CT_TARGET)\033[0m"
-	@for dep in bison flex gperf help2man libtool makeinfo; do \
+	# 扩展依赖检查
+	@for dep in bison flex gperf help2man libtool makeinfo python3 libexpat1-dev pkg-config; do \
 		command -v $$dep >/dev/null || { echo "\033[1;31m===> ❌ Missing dependency: $$dep\033[0m"; exit 1; }; \
 	done
 	@if [ ! -f .ct-ng-installed ]; then \
@@ -25,10 +26,18 @@ build:
 	fi
 	@echo "\033[1;36m===> 📦 Configuring target: $(CT_TARGET)\033[0m"
 	@$(CT_NG) $(CT_TARGET) || { echo "\033[1;31m===> ❌ Failed to configure $(CT_TARGET): $$?\033[0m"; exit 1; }
+	
+	# 设置Python路径+限制并行度+宽字符禁用
 	@echo "\033[1;32m===> 🚧 Building toolchain...\033[0m"
-	@$(CT_NG) build CT_JOBS=$(shell nproc) || { echo "\033[1;31m===> ❌ Toolchain build failed: $$?\033[0m"; exit 1; }
+	@export PYTHON=$$(which python3); \
+	export CT_PARALLEL_JOBS=$$(($$(nproc)/2)); \  # 使用一半核心
+	$(CT_NG) build \
+		CT_JOBS=$$CT_PARALLEL_JOBS \
+		CT_NCURSES_DISABLE_WIDEC=y || { \
+		echo "\033[1;31m===> ❌ Toolchain build failed: $$?\033[0m"; exit 1; }
+	
 	@echo "\033[1;32m===> ✅ Toolchain build completed at:\033[0m \033[1;34m$(CT_PREFIX)\033[0m"
-
+       
 clean:
 	@echo "\033[1;36m===> 🧹 Cleaning build artifacts...\033[0m"
 	@if [ -x "$(CT_NG)" ]; then $(CT_NG) distclean || { echo "\033[1;31m===> ❌ Failed to run ct-ng distclean: $$?\033[0m"; exit 1; }; fi
